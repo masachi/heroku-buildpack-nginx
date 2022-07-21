@@ -12,6 +12,8 @@ Some application servers (e.g. Ruby's Unicorn) halt progress when dealing with n
 * NGINX Version: 1.20.1
 ### Heroku 20
 * NGINX Version: 1.20.1
+### Heroku 22
+* NGINX Version: 1.20.1
 
 ## Requirements (Proxy Mode)
 
@@ -76,7 +78,7 @@ web: bin/start-nginx-debug bundle exec unicorn -c config/unicorn.rb
 
 nginx-buildpack provides a command named `bin/start-nginx-solo`. This is for you if you don't want to run an additional app server on the Dyno.
 This mode requires you to put a `config/nginx.conf.erb` in your app code. You can start by coping the [sample config for nginx solo mode](config/nginx-solo-sample.conf.erb).
-For example, to get NGINX and Unicorn up and running:
+To get NGINX Solo Mode running:
 
 ```bash
 $ cat Procfile
@@ -148,7 +150,7 @@ The buildpack will not start NGINX until a file has been written to `/tmp/app-in
 
 ## Setup
 
-Here are 2 setup examples. One example for a new app, another for an existing app. In both cases, we are working with ruby & unicorn. Keep in mind that this buildpack is not ruby specific.
+Here are 2 setup examples. One example for a new app, another for an existing app. In both cases, we are working with ruby & unicorn. Keep in mind that this buildpack is not ruby specific. However if your app does happen to use Ruby, make sure to add the NGINX buildpack **after** the Ruby buildpack, so the NGINX buildpack doesn't have to install its own redundant copy of Ruby for the ERB templating feature.
 
 ### Existing App
 
@@ -225,7 +227,7 @@ Create & Push Heroku App:
 ```bash
 $ heroku create
 $ heroku buildpacks:add heroku/ruby
-$ heroku buildpacks:add https://github.com/heroku/heroku-buildpack-nginx
+$ heroku buildpacks:add heroku-community/nginx
 $ git add .
 $ git commit -am "init"
 $ git push heroku main
